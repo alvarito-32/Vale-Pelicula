@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vale por ver High School Musical</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: radial-gradient(circle at top left, rgba(255,255,255,.6), transparent 35%),
+                  linear-gradient(135deg, #ffecd2, #fcb69f 50%, #f7d6e0);
+      color: #3c2634;
+      overflow: hidden;
+    }
+    .sparkle { position: fixed; opacity: .35; font-size: 54px; animation: float 5s ease-in-out infinite; }
+    .s1 { top: 8%; left: 8%; } .s2 { bottom: 9%; right: 8%; animation-delay: 1.5s; } .s3 { top: 18%; right: 14%; animation-delay: 2.5s; }
+    @keyframes float { 50% { transform: translateY(-16px) rotate(10deg); } }
+    .card {
+      width: min(760px, 100%);
+      border-radius: 34px;
+      padding: 42px 26px;
+      text-align: center;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 25px 70px rgba(117, 49, 82, .25);
+      border: 1px solid rgba(255,255,255,.9);
+      position: relative;
+      z-index: 2;
+    }
+    .pill {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #fff0f5;
+      color: #a33d68;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 { color: #a33d68; font-size: clamp(40px, 7vw, 70px); line-height: 1.02; letter-spacing: -1px; }
+    .subtitle { max-width: 590px; margin: 20px auto 0; color: #654858; font-size: 19px; line-height: 1.55; }
+    .ticket {
+      max-width: 570px;
+      margin: 28px auto;
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #fff8fb, #fff3e8);
+      border: 2px dashed #d98aac;
+      color: #7b3e5b;
+      line-height: 1.55;
+    }
+    .ticket strong { color: #a33d68; }
+    a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 16px 26px;
+      border-radius: 999px;
+      color: white;
+      background: linear-gradient(135deg, #a33d68, #d35f8d);
+      font-weight: 800;
+      font-size: 17px;
+      box-shadow: 0 12px 25px rgba(163, 61, 104, .28);
+      transition: .2s ease;
+    }
+    a:hover { transform: translateY(-2px); }
+    .footer { color: #a33d68; margin-top: 20px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="sparkle s1">✨</div>
+  <div class="sparkle s2">🎬</div>
+  <div class="sparkle s3">💫</div>
+
+  <main class="card">
+    <div class="pill">🎁 Vale especial</div>
+    <h1>Vale por ver<br />High School Musical</h1>
+    <p class="subtitle">
+      Una tarde de peli, canciones que se pegan durante días y un plan para disfrutar juntos.
+    </p>
+
+    <section class="ticket">
+      <strong>Incluye:</strong> sofá, picoteo, comentarios durante la película y derecho a cantar las canciones aunque no nos sepamos la letra.
+    </section>
+
+    <a href="reto-star-wars.html">Para canjear el vale, pulsa aquí</a>
+    <div class="footer">Preparado con cariño ❤️</div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El reto para canjear el vale</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #18243e 0, #090d18 55%, #04060b 100%);
+      color: #f7f2df;
+      padding: 24px 16px 42px;
+    }
+    .stars, .stars::before, .stars::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(#fff 1px, transparent 1px),
+                        radial-gradient(#fff 1px, transparent 1px);
+      background-size: 90px 90px, 130px 130px;
+      background-position: 0 0, 30px 40px;
+      opacity: .25;
+    }
+    .stars::before { transform: translate(20px, 10px); opacity: .3; }
+    .stars::after { transform: translate(-25px, 25px); opacity: .18; }
+    .wrap { position: relative; z-index: 2; width: min(960px, 100%); margin: 0 auto; }
+    .hero {
+      text-align: center;
+      border: 1px solid rgba(255,215,92,.25);
+      background: rgba(8, 14, 27, .8);
+      border-radius: 28px;
+      padding: 30px 20px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.35);
+    }
+    .pill { color: #ffd75c; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: 13px; }
+    h1 { color: #ffd75c; margin: 12px auto; font-size: clamp(32px, 6vw, 58px); line-height: 1.08; }
+    .hero p { max-width: 760px; margin: 0 auto; color: #d5d9e4; line-height: 1.6; font-size: 17px; }
+    .progress-card {
+      margin: 18px 0;
+      padding: 18px;
+      background: rgba(12, 22, 40, .9);
+      border: 1px solid rgba(255,215,92,.22);
+      border-radius: 22px;
+    }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; font-weight: 800; color: #ffd75c; }
+    .bar { height: 14px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.12); }
+    .bar > div { height: 100%; width: 0; transition: width .35s ease; background: linear-gradient(90deg, #f7b733, #ffd75c); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .panel {
+      background: rgba(12, 22, 40, .92);
+      border: 1px solid rgba(255,215,92,.22);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 14px 35px rgba(0,0,0,.2);
+    }
+    .panel h2 { color: #ffd75c; font-size: 24px; margin-bottom: 5px; }
+    .panel .hint { color: #9fa9bd; font-size: 14px; line-height: 1.45; margin-bottom: 12px; }
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      line-height: 1.35;
+    }
+    .item:last-child { border-bottom: none; }
+    input[type="checkbox"] { width: 20px; height: 20px; margin-top: 1px; accent-color: #ffd75c; flex: 0 0 auto; }
+    label { cursor: pointer; color: #eef1f7; }
+    .optional { opacity: .83; }
+    .actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    button, a.button {
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+    .secondary { color: #ffd75c; background: transparent; border: 1px solid rgba(255,215,92,.45); }
+    .back { color: #1c2432; background: #ffd75c; }
+    .completed {
+      display: none;
+      text-align: center;
+      margin-top: 18px;
+      background: rgba(35, 104, 72, .35);
+      border: 1px solid rgba(134, 239, 172, .5);
+      border-radius: 20px;
+      padding: 17px;
+      color: #d8ffe5;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="pill">🚀 Misión desbloqueada</div>
+      <h1>Para poder canjear el vale...</h1>
+      <p>
+        ...tendrás que ver toda la saga de Star Wars de imagen real. Marca cada película y cada temporada cuando la hayamos terminado.
+        Cuando completemos la misión, quedará oficialmente desbloqueado el vale para ver High School Musical.
+      </p>
+    </section>
+
+    <section class="progress-card">
+      <div class="progress-top">
+        <span>Progreso de la misión</span>
+        <span id="progressText">0 / 0</span>
+      </div>
+      <div class="bar"><div id="progressBar"></div></div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>🎬 Películas</h2>
+        <div id="movies"></div>
+      </div>
+
+      <div class="panel">
+        <h2>📺 Series</h2>
+        <div id="series"></div>
+      </div>
+
+    </section>
+
+    <div id="completedMessage" class="completed">
+      🎉 ¡Misión cumplida! El vale para ver High School Musical queda oficialmente desbloqueado.
+    </div>
+
+    <div class="actions">
+      <a class="button back" href="index.html">← Volver al vale</a>
+      <button class="secondary" id="resetButton">Reiniciar casillas</button>
+    </div>
+  </main>
+
+  <script>
+    const movies = [
+      "Star Wars: Episodio I — La amenaza fantasma",
+      "Star Wars: Episodio II — El ataque de los clones",
+      "Star Wars: Episodio III — La venganza de los Sith",
+      "Solo: Una historia de Star Wars",
+      "Rogue One: Una historia de Star Wars",
+      "Star Wars: Episodio IV — Una nueva esperanza",
+      "Star Wars: Episodio V — El Imperio contraataca",
+      "Star Wars: Episodio VI — El retorno del Jedi",
+      "Star Wars: Episodio VII — El despertar de la Fuerza",
+      "Star Wars: Episodio VIII — Los últimos Jedi",
+      "Star Wars: Episodio IX — El ascenso de Skywalker",
+      "Star Wars: The Mandalorian and Grogu"
+    ];
+
+    const series = [
+      "The Acolyte — Temporada 1",
+      "Obi-Wan Kenobi — Temporada 1",
+      "Andor — Temporada 1",
+      "Andor — Temporada 2",
+      "The Mandalorian — Temporada 1",
+      "The Mandalorian — Temporada 2",
+      "The Book of Boba Fett — Temporada 1",
+      "The Mandalorian — Temporada 3",
+      "Ahsoka — Temporada 1",
+      "Skeleton Crew — Temporada 1"
+    ];
+
+    const STORAGE_KEY = "retoStarWarsHighSchoolMusical";
+    const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+    function makeId(group, index) {
+      return `${group}-${index}`;
+    }
+
+    function renderList(containerId, list, group) {
+      const container = document.getElementById(containerId);
+
+      list.forEach((title, index) => {
+        const id = makeId(group, index);
+        const row = document.createElement("div");
+        row.className = "item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = id;
+        checkbox.checked = Boolean(state[id]);
+
+        checkbox.addEventListener("change", () => {
+          state[id] = checkbox.checked;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          updateProgress();
+        });
+
+        const label = document.createElement("label");
+        label.htmlFor = id;
+        label.textContent = title;
+
+        row.appendChild(checkbox);
+        row.appendChild(label);
+        container.appendChild(row);
+      });
+    }
+
+    function updateProgress() {
+      const requiredIds = [
+        ...movies.map((_, index) => makeId("movie", index)),
+        ...series.map((_, index) => makeId("series", index))
+      ];
+
+      const completed = requiredIds.filter(id => state[id]).length;
+      const total = requiredIds.length;
+      const percent = total ? Math.round((completed / total) * 100) : 0;
+
+      document.getElementById("progressText").textContent = `${completed} / ${total}`;
+      document.getElementById("progressBar").style.width = `${percent}%`;
+      document.getElementById("completedMessage").style.display = completed === total ? "block" : "none";
+    }
+
+    document.getElementById("resetButton").addEventListener("click", () => {
+      const confirmReset = confirm("¿Seguro que quieres borrar todas las casillas marcadas?");
+      if (!confirmReset) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    });
+
+    renderList("movies", movies, "movie");
+    renderList("series", series, "series");
+    updateProgress();
+  </script>
+</body>
+</html>
